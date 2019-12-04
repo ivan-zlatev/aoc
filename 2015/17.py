@@ -1,4 +1,4 @@
-#!/tool/pandora64/bin/python
+#!/usr/bin/python
 
 import re
 from itertools import combinations

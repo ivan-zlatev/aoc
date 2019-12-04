@@ -1,4 +1,4 @@
-#!/tool/pandora64/bin/python
+#!/usr/bin/python
 
 def main(string):
    houses = { "0 0":1}
