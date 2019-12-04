@@ -1,4 +1,4 @@
-#!/tool/pandora64/bin/python
+#!/usr/bin/python
 
 def main(strings):
    coord = [1,1]
