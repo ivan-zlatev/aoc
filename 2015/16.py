@@ -31,7 +31,13 @@ def main(dataFile):
       cnt1 = 0
       cnt2 = 0
       for mem in data[sue].keys():
-         if data[sue][mem] == results[mem]:
+         if mem == 'cats' or mem == 'trees':
+            if data[sue][mem] > results[mem]:
+               cnt1 += 1
+         elif mem == 'pomeranians' or mem == 'goldfish':
+            if data[sue][mem] <= results[mem]:
+               cnt1 += 1
+         elif data[sue][mem] == results[mem]:
             cnt1 += 1
       if cnt1 > 2:
          print '{} {}'.format(cnt1,sue)
