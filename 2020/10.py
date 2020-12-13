@@ -17,33 +17,21 @@ def main(data):
          jolts = adapters[0]
          adapters.pop(0)
    print "Q1: differences:\n\t1: {} \n\t2: {}\n\t3: {}\n\t1*3: {}".format(differences.count(1), differences.count(2), differences.count(3), differences.count(1)*differences.count(3))
-   adapters = copy.deepcopy(data)
-   adapters.append(max(adapters)+3)
-   adapters.append(0)
-   adapters.sort()
-   addr = 0
-   perms = {}
-   while addr < len(adapters):
-      perms[adapters[addr]] = []
-      if addr < len(adapters)-1 and adapters[addr+1] - adapters[addr] <= 3:
-         perms[adapters[addr]].append(adapters[addr+1])
-      if addr < len(adapters)-2 and adapters[addr+2] - adapters[addr] <= 3:
-         perms[adapters[addr]].append(adapters[addr+2])
-      if addr < len(adapters)-3 and adapters[addr+3] - adapters[addr] <= 3:
-         perms[adapters[addr]].append(adapters[addr+3])
-      addr += 1
-   print perms
-   print "Q2: total number of distinct ways to arrange the adapters: {}".format(resolvePath(perms))
-
-def resolvePath(data, key=0):
-   counter = 0
-   if data[key] == []:
-      #print "{} found the end of one path".format(datetime.now())
-      return 1
-   else:
-      for val in data[key]:
-         counter = counter + resolvePath(data, val)
-   return counter
+   bag = copy.deepcopy(data)
+   bag.append(0)
+   bag.sort()
+   bag.append(bag[-1:][0]+3)
+   countDict = {}
+   for i in range(1, len(bag)):
+      diff = bag[i] - bag[i-1]
+      if diff in countDict:
+         countDict[diff] += 1
+      else:
+         countDict[diff] = 1
+   arrange = [1]+[0]*bag[-1]
+   for i in bag[1:]:
+      arrange[i] = arrange[i-3] + arrange[i-2] + arrange[i-1]
+   print "Q2: total number of distinct ways to arrange the adapters: {}\n".format(arrange[-1])
 
 inputData = [
    16,
