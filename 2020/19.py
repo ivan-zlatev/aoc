@@ -58,9 +58,9 @@ def evaluateRuleQ2(rules, rule, recursionDepth = 0):
          result = ''
          for i in range(len(rules[rule])):
             #print rules[rule], rules[rule][i]
-            result = result + '('
+            result = result + '(?:'
             if i == 0:
-               result = result + '('
+               result = result + '(?:'
             for j in rules[rule][i]:
                result = result + evaluateRuleQ2(rules, j, recursionDepth)
             if i < len(rules[rule])-1:
@@ -84,9 +84,9 @@ def evaluateRule(rules, rule):
          result = ''
          for i in range(len(rules[rule])):
             #print rules[rule], rules[rule][i]
-            result = result + '('
+            result = result + '(?:'
             if i == 0:
-               result = result + '('
+               result = result + '(?:'
             for j in rules[rule][i]:
                result = result + evaluateRule(rules, j)
             if i < len(rules[rule])-1:
