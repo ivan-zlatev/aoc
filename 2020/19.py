@@ -41,21 +41,18 @@ def main(data, Q1 = True):
             results += 1
       print "Q2: {}".format(results)
 
-def evaluateRuleQ2(rules, rule):
+def evaluateRuleQ2(rules, rule, recursionDepth = 0):
+   if rule == 8 or rule == 11:
+      recursionDepth += 1
+   if recursionDepth > 20:
+      return ''
    if isinstance(rules[rule], str):
       return rules[rule]
-   elif rule == 8:
-      result = evaluateRuleQ2(rules, 42)
-      result += '+'
-      return result
-   elif rule == 11:
-      result = evaluateRuleQ2(rules, 42) + '+' + evaluateRuleQ2(rules, 31) + '+'
-      return result
    elif isinstance(rules[rule], list):
       if isinstance(rules[rule][0], int):
          result = ''
          for i in range(len(rules[rule])):
-            result = result + evaluateRuleQ2(rules, rules[rule][i])
+            result = result + evaluateRuleQ2(rules, rules[rule][i], recursionDepth)
          return result
       else:
          result = ''
@@ -65,7 +62,7 @@ def evaluateRuleQ2(rules, rule):
             if i == 0:
                result = result + '('
             for j in rules[rule][i]:
-               result = result + evaluateRuleQ2(rules, j)
+               result = result + evaluateRuleQ2(rules, j, recursionDepth)
             if i < len(rules[rule])-1:
                result = result + ')|'
             else:
@@ -1246,7 +1243,7 @@ inputData = [
    ]
 ]
 
-main(inputData)
+#main(inputData)
 
 inputData = [
    [
@@ -1301,4 +1298,4 @@ inputData = [
    ]
 ]
 
-main(inputData, False)
+#main(inputData, False)
