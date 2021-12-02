@@ -14,4 +14,4 @@ cookie='session=53616c7465645f5fcac75acc9be4a4bfe0d4f620069d7ab200d68192ab5881dc
 } >&2
 
 curl --fail -sS -b "$cookie" "https://adventofcode.com/$year/day/$day/input" -o "$output_path"
-cp template.py "$output_path/$day"
+cp template.py "$(printf '%04d/%02d/.' $year $day)"
