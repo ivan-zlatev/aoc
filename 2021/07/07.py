@@ -1,25 +1,21 @@
 #!/usr/bin/python3
-from statistics import median
+import statistics
+import math
 
 def puzzle1(data):
-    med = int(median(data))
+    med = int(statistics.median(data))
     fuel = 0
     for sub in data:
         fuel += abs(sub - med)
     return fuel
 
 def puzzle2(data):
-    fuels = []
-    for i in range(min(data), max(data)):
-        subsFuel = 0
-        for sub in data:
-            fuel = 0
-            for f in range(abs(sub - i)+1):
-                fuel += f
-            subsFuel += fuel
-        fuels.append(subsFuel)
-        #print(fuels)
-    return min(fuels)
+    mid = math.ceil(statistics.mean(data))
+    print(mid)
+    fuel = 0
+    for sub in data:
+        fuel += int((abs(sub - mid)**2 + abs(sub - mid))/2.0)
+    return fuel
 
 
 def readData(inputFile):
