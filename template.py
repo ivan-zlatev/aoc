@@ -1,10 +1,17 @@
 #!/usr/bin/python3
 
+from time import perf_counter_ns
+
 def puzzle1(data):
-    return 0
+    print(data)
+    START = perf_counter_ns()
+    STOP = perf_counter_ns()
+    return (STOP-START)/1000.0, 0
 
 def puzzle2(data):
-    return 0
+    START = perf_counter_ns()
+    STOP = perf_counter_ns()
+    return (STOP-START)/1000.0, 0
 
 
 def readData(inputFile):
@@ -15,8 +22,10 @@ def readData(inputFile):
     data = []
     for i in inputData.split(','):
         data.append(int(i))
-    print("\nPuzzle 1: " + str(puzzle1(data.copy())))
-    print("Puzzle 2: " + str(puzzle2(data.copy())) + "\n")
+    time, result = puzzle1(data.copy())
+    print("Puzzle 1 result is " + str(result) + " and it took " + str(time) + " ms")
+    time, result = puzzle2(data.copy())
+    print("Puzzle 2 result is " + str(result) + " and it took " + str(time) + " ms\n")
 
 readData("test.txt")
 #readData("input.txt")

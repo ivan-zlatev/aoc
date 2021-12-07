@@ -1,21 +1,25 @@
 #!/usr/bin/python3
+
+from time import perf_counter_ns
 import statistics
-import math
 
 def puzzle1(data):
+    START = perf_counter_ns()
     med = int(statistics.median(data))
     fuel = 0
     for sub in data:
         fuel += abs(sub - med)
-    return fuel
+    STOP = perf_counter_ns()
+    return (STOP-START)/1000.0, fuel
 
 def puzzle2(data):
-    mid = math.ceil(statistics.mean(data))
-    print(mid)
+    START = perf_counter_ns()
+    mid = round(statistics.mean(data))
     fuel = 0
     for sub in data:
         fuel += int((abs(sub - mid)**2 + abs(sub - mid))/2.0)
-    return fuel
+    STOP = perf_counter_ns()
+    return (STOP-START)/1000.0, fuel
 
 
 def readData(inputFile):
@@ -26,8 +30,10 @@ def readData(inputFile):
     data = []
     for i in inputData.split(','):
         data.append(int(i))
-    print("\nPuzzle 1: " + str(puzzle1(data.copy())))
-    print("Puzzle 2: " + str(puzzle2(data.copy())) + "\n")
+    time, result = puzzle1(data.copy())
+    print("Puzzle 1 result is " + str(result) + " and it took " + str(time) + " ms")
+    time, result = puzzle2(data.copy())
+    print("Puzzle 2 result is " + str(result) + " and it took " + str(time) + " ms\n")
 
 readData("test.txt")
 readData("input.txt")
