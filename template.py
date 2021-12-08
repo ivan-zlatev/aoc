@@ -6,12 +6,12 @@ def puzzle1(data):
     print(data)
     START = perf_counter_ns()
     STOP = perf_counter_ns()
-    return (STOP-START)/1000.0, 0
+    return (STOP-START)/1000000.0, 0
 
 def puzzle2(data):
     START = perf_counter_ns()
     STOP = perf_counter_ns()
-    return (STOP-START)/1000.0, 0
+    return (STOP-START)/1000000.0, 0
 
 
 def readData(inputFile):

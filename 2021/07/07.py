@@ -10,7 +10,7 @@ def puzzle1(data):
     for sub in data:
         fuel += abs(sub - med)
     STOP = perf_counter_ns()
-    return (STOP-START)/1000.0, fuel
+    return (STOP-START)/1000000.0, fuel
 
 def puzzle2(data):
     START = perf_counter_ns()
@@ -19,7 +19,7 @@ def puzzle2(data):
     for sub in data:
         fuel += int((abs(sub - mid)**2 + abs(sub - mid))/2.0)
     STOP = perf_counter_ns()
-    return (STOP-START)/1000.0, fuel
+    return (STOP-START)/1000000.0, fuel
 
 
 def readData(inputFile):
