@@ -13,7 +13,7 @@ def puzzle1(data):
     result = []
     recFunc(data)
     STOP = perf_counter_ns()
-    return (STOP-START)/1000000.0, len(results)
+    return (STOP-START)/1000000.0, len(set(results))
 
 def puzzle2(data):
     START = perf_counter_ns()
@@ -24,14 +24,13 @@ def puzzle2(data):
         if i.islower() and not (i in ['start', 'end']):
             recFunc(data, i)
     STOP = perf_counter_ns()
-    return (STOP-START)/1000000.0, len(results)
+    return (STOP-START)/1000000.0, len(set(results))
 
 def recFunc(data, smallCave='', thisNode='start'):
     global results, result
     if thisNode == "end":
         tup = tuple(result + [thisNode])
-        if tup not in results:
-            results.append(tup)
+        results.append(tup)
     else:
         for val in data[thisNode]:
             if (val == smallCave and len([x for x in result if x == smallCave]) < 2) or not ((val.islower() and val in result)):
