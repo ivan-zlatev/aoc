@@ -4,16 +4,12 @@ from time import perf_counter_ns
 import copy
 
 def puzzle1(data):
-    START = perf_counter_ns()
     for i in data:
         print(i)
-    STOP = perf_counter_ns()
-    return (STOP-START)/1000000.0, 0
+    return 0
 
 def puzzle2(data):
-    START = perf_counter_ns()
-    STOP = perf_counter_ns()
-    return (STOP-START)/1000000.0, 0
+    return 0
 
 
 def readData(inputFile):
@@ -26,10 +22,14 @@ def readData(inputFile):
         data.append(i)
         #data.append([0] + [int(char) for char in inputData[i].strip()] + [0])
     #data.append([0 for x in range(len(inputData[0])+1)])
-    time, result = puzzle1(copy.deepcopy(data))
-    print("Puzzle 1 result is " + str(result) + " and it took " + str(time) + " ms")
-    time, result = puzzle2(copy.deepcopy(data))
-    print("Puzzle 2 result is " + str(result) + " and it took " + str(time) + " ms\n")
+    START = perf_counter_ns()
+    result = puzzle1(copy.deepcopy(data))
+    time = (perf_counter_ns()-START)/1000000.0
+    print("Puzzle 1 result is {} and it took {:.3f} ms\n".format(result, time))
+    START = perf_counter_ns()
+    result = puzzle2(copy.deepcopy(data))
+    time = (perf_counter_ns()-START)/1000000.0
+    print("Puzzle 2 result is {} and it took {:.3f} ms\n".format(result, time))
 
 readData("test.txt")
 #readData("input.txt")
