@@ -22,4 +22,4 @@ fi
 
 curl --fail -sS -b "$cookie" "https://adventofcode.com/$year/day/$day/input" -o "$output_path/input.txt"
 cp template.py "$(printf '%04d/%02d/%02d.py' $year $day $day)"
-cd 2021
+echo $output_path

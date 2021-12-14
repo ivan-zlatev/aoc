@@ -25,7 +25,7 @@ def readData(inputFile):
     START = perf_counter_ns()
     result = puzzle1(copy.deepcopy(data))
     time = (perf_counter_ns()-START)/1000000.0
-    print("Puzzle 1 result is {} and it took {:.3f} ms\n".format(result, time))
+    print("Puzzle 1 result is {} and it took {:.3f} ms".format(result, time))
     START = perf_counter_ns()
     result = puzzle2(copy.deepcopy(data))
     time = (perf_counter_ns()-START)/1000000.0
