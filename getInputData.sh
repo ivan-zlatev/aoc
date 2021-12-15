@@ -15,6 +15,8 @@ cookie=`cat SESSIONID`  # set this from the login session
 if [ ! -f "$output_path/test.txt" ]; then
     aoc-to-markdown -y $year -d $day > "$output_path/test.txt"
 fi
+echo "https://adventofcode.com/$year/day/$day"
+echo "cd "`pwd`"/$output_path"
 [ -f "$output_path/input.txt" ] && {
     echo already loaded
     exit
@@ -22,4 +24,3 @@ fi
 
 curl --fail -sS -b "$cookie" "https://adventofcode.com/$year/day/$day/input" -o "$output_path/input.txt"
 cp template.py "$(printf '%04d/%02d/%02d.py' $year $day $day)"
-echo $output_path
