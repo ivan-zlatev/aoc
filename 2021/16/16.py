@@ -8,16 +8,19 @@ def puzzle1(data):
     global count
     count = 0
     raw = ''.join([hexToBin(x) for x in data])
-    packets = []
-    while len(raw) > 0 and '1' in raw:
-        packet, packetLength = readPacket(raw)
-        raw = raw[packetLength:]
-        packets.append(packet)
-        #print('Extracted packets at top lvl: ', packets)
+    packet = readPacket(raw)[0]
+    #print('Extracted packets at top lvl: ', packet)
     return count
 
 def puzzle2(data):
+    raw = ''.join([hexToBin(x) for x in data])
+    packet = readPacket(raw)[0]
+    #print('Extracted packets at top lvl: ', packet)
+    calculateValues(packet)
     return 0
+
+def calculateValues(packet):
+    return packet
 
 def readPacket(raw):
     global count
@@ -42,11 +45,20 @@ def readPacket(raw):
                 innerPacket, innerPacketLength = readPacket(innerRaw)
                 innerRaw = innerRaw[innerPacketLength:]
                 innerPackets.append(innerPacket)
-            packet = [pVer, pID, lengthTypeId, copy.deepcopy(innerPackets)]
+            packet = [pVer, pID, copy.deepcopy(innerPackets)]
             return packet, 7+15+bits
         else: # 11 bits define the number of packets in this one
             packetNum = int(raw[:11], 2)
-            return [pVer, pID, lengthTypeId, packetNum], 7+11
+            innerRaw = raw[11:]
+            innerPackets = []
+            totalInnerPacketLength = 0
+            while len(innerPackets) < packetNum and '1' in innerRaw:
+                innerPacket, innerPacketLength = readPacket(innerRaw)
+                innerRaw = innerRaw[innerPacketLength:]
+                innerPackets.append(innerPacket)
+                totalInnerPacketLength += innerPacketLength
+            packet = [pVer, pID, copy.deepcopy(innerPackets)]
+            return packet, 7+11+totalInnerPacketLength
 
 def readLiteral(raw): # read a single literal packet and return its int decimal value
     readPacket = True
@@ -102,4 +114,4 @@ readData("test4.txt")
 readData("test5.txt")
 readData("test6.txt")
 readData("test7.txt")
-readData("input.txt")
+#readData("input.txt")
