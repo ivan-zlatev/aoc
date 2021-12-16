@@ -16,11 +16,16 @@ if [ ! -f "$output_path/test.txt" ]; then
     aoc-to-markdown -y $year -d $day > "$output_path/test.txt"
 fi
 echo "https://adventofcode.com/$year/day/$day"
-echo "cd "`pwd`"/$output_path"
-[ -f "$output_path/input.txt" ] && {
-    echo already loaded
-    exit
-} >&2
+if [ -f "$output_path/input.txt" ]; then
+    echo "$output_path/input.txt already exists"
+else
+    curl --fail -sS -b "$cookie" "https://adventofcode.com/$year/day/$day/input" -o "$output_path/input.txt"
+fi
 
-curl --fail -sS -b "$cookie" "https://adventofcode.com/$year/day/$day/input" -o "$output_path/input.txt"
-cp template.py "$(printf '%04d/%02d/%02d.py' $year $day $day)"
+if [ -f "$(printf '%04d/%02d/%02d.py' $year $day $day)" ]; then
+    echo "$(printf '%04d/%02d/%02d.py' $year $day $day) already exists"
+else
+    cp template.py "$(printf '%04d/%02d/%02d.py' $year $day $day)"
+fi
+echo "cd "`pwd`"/$output_path"
+cd `pwd`"/$output_path"
