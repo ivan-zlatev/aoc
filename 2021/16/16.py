@@ -2,6 +2,7 @@
 
 from time import perf_counter_ns
 import copy
+import math
 
 count = 0
 def puzzle1(data):
@@ -16,10 +17,29 @@ def puzzle2(data):
     raw = ''.join([hexToBin(x) for x in data])
     packet = readPacket(raw)[0]
     #print('Extracted packets at top lvl: ', packet)
-    calculateValues(packet)
-    return 0
+    return calculateValues(packet)
 
 def calculateValues(packet):
+    pID = packet[1]
+    if pID == 4:
+        return packet[2]
+    elif pID == 0:
+        return sum([calculateValues(x) for x in packet[2]])
+    elif pID == 1:
+        return math.prod([calculateValues(x) for x in packet[2]])
+    elif pID == 2:
+        return min([calculateValues(x) for x in packet[2]])
+    elif pID == 3:
+        return max([calculateValues(x) for x in packet[2]])
+    elif pID == 5:
+        res = [calculateValues(x) for x in packet[2]]
+        return res[0] > res[1]
+    elif pID == 6:
+        res = [calculateValues(x) for x in packet[2]]
+        return res[0] < res[1]
+    elif pID == 7:
+        res = [calculateValues(x) for x in packet[2]]
+        return res[0] == res[1]
     return packet
 
 def readPacket(raw):
@@ -107,6 +127,15 @@ def hexToBin(char):
     }
     return mapping[char]
 
+assert puzzle2('C200B40A82') == 3 # sum 1 + 2
+assert puzzle2('04005AC33890') == 54 # product 6 * 9
+assert puzzle2('880086C3E88112') == 7 # min(7, 8, 9)
+assert puzzle2('CE00C43D881120') == 9 # max(7, 8, 9)
+assert puzzle2('D8005AC2A8F0') == 1 # 5 < 15
+assert puzzle2('F600BC2D8F') == 0 # 5 > 15
+assert puzzle2('9C005AC2F8F0') == 0 # 5 == 15
+assert puzzle2('9C0141080250320F1802104A08') == 1 # 1 + 3 == 2 * 2
+
 readData("test.txt")
 readData("test2.txt")
 readData("test3.txt")
@@ -114,4 +143,5 @@ readData("test4.txt")
 readData("test5.txt")
 readData("test6.txt")
 readData("test7.txt")
-#readData("input.txt")
+readData("input.txt")
+
