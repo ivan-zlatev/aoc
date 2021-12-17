@@ -4,50 +4,41 @@ from time import perf_counter_ns
 import copy
 
 def puzzle1(data):
-    print(data)
     highest = []
-    for x in range(100):
-        for y in range(-100, 100):
+    for x in range(1000):
+        for y in range(-1000, 1000):
             result, maxY = simulateLaunch(data, x, y)
             if result:
                 highest.append(maxY)
-                #print('xVel =', x, 'yVel =', y, 'HIGHEST y =', maxY)
     return max(highest)
 
 def puzzle2(data):
-    print(data)
     valid = 0
     for x in range(1000):
-        for y in range(-100, 100):
+        for y in range(-1000, 1000):
             if simulateLaunch(data, x, y)[0]:
                 valid += 1
-                #print('xVel =', x, 'yVel =', y)
     return valid
 
 def simulateLaunch(data, xVel, yVel, x=0, y=0, maxY=0):
-    #print(xVel, yVel, x, y)
-    maxY = max(maxY, y) # save current step to the list for logging
-    x += xVel # increment the x by one velocity
-    y += yVel # increment the x by one velocity
-    if xVel > 0: # due to drag, xVel -> 0
-        xVel -= 1
-    elif xVel < 0:
-        xVel += 1
-    yVel -= 1 # due to gravitiy yVel -= 1
-    if x >= min(data['x']) and x <= max(data['x']) and y >= min(data['y']) and y <= max(data['y']): # if current step is in the area -> return True and the steps log
-        return True, maxY
-    else:
-        if xVel == 0 and (x < min(data['x']) or x > max(data['x'])): # x out of bounds with xVel == 0
-            #print('x out of bounds')
-            return False, maxY
-        elif x > max(data['x']): # overshot x
-            #print('overshot x')
-            return False, maxY
-        elif y < min(data['y']): # y out of bounds, below the target area
-            #print('y below target area')
-            return False, maxY
+    while True:
+        maxY = max(maxY, y) # save current step to the list for logging
+        x += xVel # increment the x by one velocity
+        y += yVel # increment the x by one velocity
+        if xVel > 0: # due to drag, xVel -> 0
+            xVel -= 1
+        elif xVel < 0:
+            xVel += 1
+        yVel -= 1 # due to gravitiy yVel -= 1
+        if x >= min(data['x']) and x <= max(data['x']) and y >= min(data['y']) and y <= max(data['y']): # if current step is in the area -> return True and the steps log
+            return True, maxY
         else:
-            return simulateLaunch(data, xVel, yVel, x, y, maxY)
+            if xVel == 0 and (x < min(data['x']) or x > max(data['x'])): # x out of bounds with xVel == 0
+                return False, maxY
+            elif x > max(data['x']): # overshot x
+                return False, maxY
+            elif y < min(data['y']): # y out of bounds, below the target area
+                return False, maxY
 
 def checkIfProbeInArea(x, y, xRange, yRange):
     xInRange = x >= min(xRange) and x <= max(xRange)
