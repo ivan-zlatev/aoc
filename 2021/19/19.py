@@ -2,6 +2,8 @@
 
 from time import perf_counter_ns
 import copy
+from collections import Counter
+import itertools
 
 def puzzle1(data):
     grid = {}
@@ -21,15 +23,33 @@ def puzzle1(data):
         for add in toAdd:
             grid[add[0]] = copy.deepcopy(add[1])
             del data[add[0]]
-        print(data.keys(), grid.keys())
-    #for key, val in grid.items():
-    #    print(key)
-    #    for i in val:
-    #        print('    ', i)
     return getUniquePoints(grid)
 
 def puzzle2(data):
-    return 0
+    grid = {}
+    grid['0'] = [tuple(data['0']), [0, 0, 0]]
+    del data['0']
+    for key, val in data.items():
+        data[key] = getListRotations(copy.deepcopy(data[key]))
+    while len(data.keys()) > 0:
+        toAdd = []
+        for key in data.keys():
+            if len(toAdd) == 0:
+                for gridKey in grid.keys():
+                    if len(toAdd) == 0:
+                        match, x, y, z = getOffsets(grid[gridKey][0], data[key])
+                        if len(match) > 0 and key not in [x[0] for x in toAdd]:
+                            toAdd.append([key, [copy.deepcopy(match), [grid[gridKey][1][0]+x, grid[gridKey][1][1]+y, grid[gridKey][1][2]+z]]])
+        for add in toAdd:
+            grid[add[0]] = copy.deepcopy(add[1])
+            del data[add[0]]
+    return getBiggestManhattanDistance([x[1] for x in grid.values()])
+
+def getBiggestManhattanDistance(points):
+    result = []
+    for l, r in list(itertools.permutations(points,2)):
+        result.append(sum([abs(x-y) for (x,y) in zip(l,r)]))
+    return max(result)
 
 def getUniquePoints(grid):
     result = []
@@ -41,48 +61,24 @@ def getUniquePoints(grid):
     return len(result)
 
 def getOffsets(groundData, rotationsData, debug=False):
-    searchRange = range(-2000, 2000)
     resultX = []
     resultY = []
     resultZ = []
     groundXCoords = tuple([x[0] for x in groundData])
     groundYCoords = tuple([y[1] for y in groundData])
     groundZCoords = tuple([z[2] for z in groundData])
-    for rot in rotationsData: # find all X+offsetY matches between groundData and any rotationsData
-        testXCoords = [x[0] for x in rot]
-        for offsetX in searchRange:
-            offsetXCoords = [x+offsetX for x in groundXCoords]
-            intersections = list(set(offsetXCoords).intersection(testXCoords))
-            if len(intersections) > 11:
-                if [rot, offsetX] not in resultX:
-                    resultX.append([tuple(rot), -offsetX])
-    if debug:
-        print('Found the following intersecting rots by X:')
-        for i in resultX:
-            print(i)
-    for rot, offsetX in resultX: # find all Y+offsetY matches between groundData and any rotationsData that matches X+offsetX
-        testYCoords = [y[1] for y in rot]
-        for offsetY in searchRange:
-            offsetYCoords = [y+offsetY for y in groundYCoords]
-            interactions = list(set(offsetYCoords).intersection(testYCoords))
-            if len(interactions) > 11:
-                resultY.append([tuple(rot), offsetX, -offsetY])
-    if debug:
-        print('Found the following intersecting rots by Y:')
-        for i in resultY:
-            print(i)
-    for rot, offsetX, offsetY in resultY: # find all Z+offsetZ matches between groundData and any rotationsData that matches X+offsetX and Y+offsetY. There should be 0 or 1 resultsZ after this.
-        testZCoords = [z[2] for z in rot]
-        for offsetZ in searchRange:
-            offsetZCoords = [z+offsetZ for z in groundZCoords]
-            interactions = list(set(offsetZCoords).intersection(testZCoords))
-            if len(interactions) > 11:
-                #print(interactions)
-                resultZ.append([rot, offsetX, offsetY, -offsetZ])
-    if debug:
-        print('Found the following intersecting rots by Z:')
-        for i in resultZ:
-            print(i)
+    for rot in rotationsData: # find all X matches between groundData and any rotationsData
+        c = Counter([b-a for (a,b) in itertools.product([x[0] for x in rot], groundXCoords)]).most_common(1)
+        if c[0][1] > 11:
+            resultX.append([tuple(rot), c[0][0]])
+    for rot, offsetX in resultX: # find all Y matches between groundData and any rotationsData that matches X
+        c = Counter([b-a for (a,b) in itertools.product([y[1] for y in rot], groundYCoords)]).most_common(1)
+        if c[0][1] > 11:
+            resultY.append([rot, offsetX, c[0][0]])
+    for rot, offsetX, offsetY in resultY: # find all Z matches between groundData and any rotationsData that matches X and Y. There should be 0 or 1 resultsZ after this.
+        c = Counter([b-a for (a,b) in itertools.product([z[2] for z in rot], groundZCoords)]).most_common(1)
+        if c[0][1] > 11:
+            resultZ.append([rot, offsetX, offsetY, c[0][0]])
     if len(resultZ) > 0:
         return resultZ[0]
     else:
@@ -147,4 +143,4 @@ def readData(inputFile):
     print("Puzzle 2 result is {} and it took {:.3f} ms\n".format(result, time))
 
 readData("test.txt")
-#readData("input.txt")
+readData("input.txt")
