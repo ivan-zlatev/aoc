@@ -1,16 +1,16 @@
 #!/bin/bash
 set -e
 
-year=`date | cut -d' ' -f 4`
+year=`date '+%G'`
 if [ -z "$1" ]; then
-    day=`date | cut -d' ' -f 2`
+    day=`date '+%d'`
 else
     day=$1
 fi
 
 output_path="$(printf '%04d/%02d' $year $(( 10#$day )))"
 mkdir -p "$output_path"
-cookie=`cat SESSIONID`  # set this from the login session
+cookie=`cat SESSIONID`  # set this from the login session; contents should be 'cookie=1234566122....' where 1234566122.... is the session id
 
 if [ ! -f "$output_path/test.txt" ]; then
     aoc-to-markdown -y $year -d $day > "$output_path/test.txt"
